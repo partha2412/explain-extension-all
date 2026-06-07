@@ -2,20 +2,35 @@
 (() => {
   let tooltipEl = null;
   let currentSelection = null;
+  let currentContextText = null;
 
   function getSurroundingContext(selectedText) {
     const fullText = document.body.innerText || "";
     const idx = fullText.indexOf(selectedText);
-    if (idx === -1) return `[[[${selectedText}]]]`;
-    const before = fullText.slice(Math.max(0, idx - 300), idx);
-    const after = fullText.slice(idx + selectedText.length, idx + selectedText.length + 300);
-    const beforeTrimmed = before.replace(/^.*?([.!?]\s+|^)/s, "").trim();
-    const afterTrimmed = after.replace(/([.!?][\s\S]*)/s, "$1").replace(/([.!?]).*/s, "$1").trim();
-    return `${beforeTrimmed} [[[${selectedText}]]] ${afterTrimmed}`.trim();
+
+    if (idx === -1) {
+      return selectedText; // Fallback
+    }
+
+    // Get context before and after
+    const before = fullText.slice(Math.max(0, idx - 350), idx).trim();
+    const after = fullText.slice(idx + selectedText.length, idx + selectedText.length + 350).trim();
+
+    // Clean up and combine
+    let context = "";
+    if (before) context += before + " ";
+    context += selectedText + " ";
+    if (after) context += after;
+
+    return context.trim();
   }
 
   function removeTooltip() {
-    if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
+    if (tooltipEl) {
+      tooltipEl.remove();
+      tooltipEl = null;
+    }
+    currentContextText = null;
   }
 
   function createTooltip(x, y) {
@@ -33,9 +48,11 @@
 
     const tw = tooltipEl.offsetWidth, th = tooltipEl.offsetHeight, vw = window.innerWidth;
     let left = x - tw / 2, top = y - th - 12;
+
     if (left < 8) left = 8;
     if (left + tw > vw - 8) left = vw - tw - 8;
     if (top < 8) top = y + 20;
+
     tooltipEl.style.left = `${left + window.scrollX}px`;
     tooltipEl.style.top = `${top + window.scrollY}px`;
 
@@ -45,31 +62,22 @@
     });
   }
 
-  // function showLoading() {
-  //   if (!tooltipEl) return;
-  //   tooltipEl.innerHTML = `<div class="et-card"><div class="et-loading"><span></span><span></span><span></span></div></div>`;
-  // }
   function showLoading() {
     if (!tooltipEl) return;
-
     tooltipEl.innerHTML = `
-    <div class="et-card et-loading-card">
-      <!-- Skeleton Header -->
-      <div class="et-skeleton-header">
-        <div class="et-skeleton-icon"></div>
-        <div class="et-skeleton-title"></div>
-      </div>
-      
-      <!-- Skeleton Body Lines -->
-      <div class="et-skeleton-body">
-        <div class="et-skeleton-line"></div>
-        <div class="et-skeleton-line"></div>
-        <div class="et-skeleton-line"></div>
-        <div class="et-skeleton-line short"></div>
-      </div>
-      
-      <div class="et-loading-text">Getting explanation...</div>
-    </div>`;
+      <div class="et-card et-loading-card">
+        <div class="et-skeleton-header">
+          <div class="et-skeleton-icon"></div>
+          <div class="et-skeleton-title"></div>
+        </div>
+        <div class="et-skeleton-body">
+          <div class="et-skeleton-line"></div>
+          <div class="et-skeleton-line"></div>
+          <div class="et-skeleton-line"></div>
+          <div class="et-skeleton-line short"></div>
+        </div>
+        <div class="et-loading-text">Getting explanation...</div>
+      </div>`;
   }
 
   function showResult(text) {
@@ -110,48 +118,67 @@
 
     const cfg = await getConfig();
     if (!cfg?.provider) {
-      showError("Not configured. Click the extension icon to pick a provider.");
+      showError("Not configured. Click the extension icon to set up.");
       return;
     }
-    if ( !cfg.apiKey) {
+    if (!cfg.apiKey) {
       showError("No API key set. Click the extension icon.");
       return;
     }
 
     showLoading();
 
-    const contextText = getSurroundingContext(currentSelection);
-    const userPrompt = `The selected part is marked with [[[...]]]. Explain what it means in simple terms.\n\n${contextText}`;
+    const userPrompt = `You are a helpful, clear, and concise assistant.
+
+**Selected Text:**
+${currentSelection}
+
+**Surrounding Context:**
+${currentContextText || currentSelection}
+
+---
+
+Explain the **Selected Text** in simple, easy-to-understand English.
+Use the surrounding context to give better understanding when needed.
+Give the explanation in 3 to 4 lines only.
+Use natural, friendly language. No bullet points. No markdown. Don't mention 'The selected text...' insted just give the explaination.`;
 
     try {
-      // runChain is loaded from llm.js (injected before this file)
       const result = await runChain(cfg, userPrompt);
       showResult(result);
     } catch (err) {
-      showError(err.message || "Something went wrong.");
+      console.error(err);
+      showError(err.message || "Something went wrong. Please try again.");
     }
   }
 
-  document.addEventListener("click", e => {
+  // Selection Handler
+  document.addEventListener("mouseup", e => {
     setTimeout(() => {
       const sel = window.getSelection();
       const text = sel?.toString().trim();
+
       if (text && text.length > 3) {
         currentSelection = text;
+        currentContextText = getSurroundingContext(text);
+
         const rect = sel.getRangeAt(0).getBoundingClientRect();
         createTooltip(rect.left + rect.width / 2, rect.top);
       } else if (!tooltipEl?.contains(e.target)) {
         removeTooltip();
-        currentSelection = null;
       }
-    }, 10);
+    }, 60);
   });
 
   document.addEventListener("mousedown", e => {
-    if (tooltipEl && !tooltipEl.contains(e.target)) removeTooltip();
+    if (tooltipEl && !tooltipEl.contains(e.target)) {
+      removeTooltip();
+    }
   });
 
   document.addEventListener("scroll", () => {
-    if (tooltipEl && !tooltipEl.querySelector(".et-card")) removeTooltip();
+    if (tooltipEl && !tooltipEl.querySelector(".et-card")) {
+      removeTooltip();
+    }
   });
 })();
