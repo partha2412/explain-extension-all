@@ -14,29 +14,33 @@ Supports OpenAI, Claude, Gemini, Groq, Mistral, Hugging Face, Together AI, Ollam
 
 ## Demo
 
-### Select Any Text
+### 1. Enter Your API Key and Save Settings
 
-```text
-Quantum entanglement is a physical phenomenon...
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a0c96ea7-c328-4210-84ae-51d2f135af71" width="320" alt="Extension Settings">
+</p>
 
-↓
+The extension automatically detects the provider from your API key and lets you select a model before saving.
 
-### Click Explain
+---
 
-```text
-[ Explain ]
-```
+### 2. Select Any Text and Click **Explain**
 
-↓
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/bf14cc34-c5af-4b33-a169-810c4e5f829e" width="700" alt="Select Text and Click Explain">
+</p>
 
-### Get a Simple Explanation
+Highlight any word, sentence, or paragraph on a webpage. A floating **Explain** button will appear near the selection.
 
-```text
-Quantum entanglement is when two particles become connected
-so that a change in one can affect the other, even when
-they are far apart.
-```
+---
+
+### 3. Get an Instant Explanation
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ef89e99e-5069-451a-a0d3-3fa666a468ff" width="700" alt="Generated Explanation">
+</p>
+
+The extension sends the selected text and surrounding context to your configured AI model and displays a concise explanation directly on the page.
 
 ---
 
@@ -157,27 +161,6 @@ http://localhost:11434
 
 Save settings.
 
----
-
-## Usage
-
-### Step 1
-
-Open any webpage.
-
-### Step 2
-
-Highlight text.
-
-### Step 3
-
-Click the floating **Explain** button.
-
-### Step 4
-
-Receive an AI-generated explanation instantly.
-
----
 
 ## How It Works
 
@@ -227,4 +210,8 @@ The extension uses the selected text along with nearby content to generate more 
 
 ## License
 
-MIT License
+This project is licensed under a custom Non-Commercial License.
+
+Commercial use, resale, SaaS offerings, and monetization of this software are prohibited without prior written permission from the author.
+
+See the LICENSE file for details.
