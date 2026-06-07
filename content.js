@@ -101,9 +101,10 @@
             </svg>
           </button>
         </div>
-        <div class="et-body">${text}</div>
+        <div class="et-body"></div>
         <button class="et-close" id="et-close-btn">✕ Close</button>
       </div>`;
+    tooltipEl.querySelector(".et-body").textContent = text;
     document.getElementById("copy-btn").addEventListener("click", async (e) => {
       e.stopPropagation();
 
