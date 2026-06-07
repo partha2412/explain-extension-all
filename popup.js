@@ -92,7 +92,7 @@ modelInput.addEventListener("input", () => {
 
 apiKeyInput.addEventListener("input", () => {
   const key = apiKeyInput.value.trim();
-  const isOllama = key === "ollama" || key === "";
+  const isOllama = key.trim().toLowerCase() === "ollama";
 
   if (isOllama) {
     badge.textContent = "✓ Ollama (local)";
@@ -103,6 +103,11 @@ apiKeyInput.addEventListener("input", () => {
     return;
   }
 
+  if (!key) {
+    flash("Please enter an API key", "#f87171");
+    return;
+  }
+  
   const detected = detectProvider(key);
   if (detected) {
     badge.textContent = "✓ " + detected.label;
@@ -127,7 +132,7 @@ toggleVis.addEventListener("click", () => {
 
 saveBtn.addEventListener("click", () => {
   const key = apiKeyInput.value.trim();
-  const isOllama = key === "ollama" || key === "";
+  const isOllama = key.trim().toLowerCase() === "ollama";
   const detected = isOllama
     ? { provider: "ollama", label: "Ollama" }
     : detectProvider(key);

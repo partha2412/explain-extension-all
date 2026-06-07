@@ -89,10 +89,47 @@
             <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
           </svg>
           Explanation
+          <button id="copy-btn" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
         </div>
         <div class="et-body">${text}</div>
         <button class="et-close" id="et-close-btn">✕ Close</button>
       </div>`;
+    document.getElementById("copy-btn").addEventListener("click", async (e) => {
+      e.stopPropagation();
+
+      const content =
+        document.querySelector(".et-body")?.innerText || "";
+
+      try {
+        await navigator.clipboard.writeText(content);
+
+        const btn = document.getElementById("copy-btn");
+
+        btn.innerHTML = "✓";
+
+        setTimeout(() => {
+          btn.innerHTML = `
+      <svg width="12" height="12" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round"
+           stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+    `;
+        }, 1200);
+
+      } catch (err) {
+        console.error(err);
+      }
+    });
     document.getElementById("et-close-btn").addEventListener("click", removeTooltip);
   }
 
@@ -141,7 +178,7 @@ ${currentContextText || currentSelection}
 Explain the **Selected Text** in simple, very small, easy-to-understand English.
 Use the surrounding context to give better understanding when needed.
 Don't mention 'The selected text...' insted just give the explaination.
-Give the explanation in 2 to 3 lines only.
+Give the explanation in max 2 to 3 lines only.
 Use natural, friendly language. No bullet points. No markdown.`;
 
     try {
@@ -171,7 +208,7 @@ Use natural, friendly language. No bullet points. No markdown.`;
     }, 60);
   });
 
-  document.addEventListener("click", e => {
+  document.addEventListener("mouseup", e => {
     if (tooltipEl && !tooltipEl.contains(e.target)) {
       removeTooltip();
     }
