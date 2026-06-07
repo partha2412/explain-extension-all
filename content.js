@@ -13,8 +13,11 @@
     }
 
     // Get context before and after
-    const before = fullText.slice(Math.max(0, idx - 350), idx).trim();
-    const after = fullText.slice(idx + selectedText.length, idx + selectedText.length + 350).trim();
+    const before = fullText.slice(Math.max(0, idx - 1500), idx).trim();
+    const after = fullText.slice(
+      idx + selectedText.length,
+      idx + selectedText.length + 1500
+    ).trim();
 
     // Clean up and combine
     let context = "";
@@ -158,28 +161,32 @@
       showError("Not configured. Click the extension icon to set up.");
       return;
     }
-    if (!cfg.apiKey) {
+    if (!cfg.apiKey && cfg.provider !== "ollama") {
       showError("No API key set. Click the extension icon.");
       return;
     }
 
     showLoading();
 
-    const userPrompt = `You are a helpful, clear, and concise assistant.
+    const userPrompt = `
+    The user highlighted text while reading a webpage.
 
-**Selected Text:**
-${currentSelection}
+    Your task:
+    - Understand what the highlighted text means IN THE CONTEXT OF THIS PAGE.
+    - Focus primarily on the selected text.
+    - Use the surrounding context to determine the author's intended meaning.
+    - Do NOT behave like a dictionary.
+    - Do NOT simply define words.
+    - Explain what the selected text means in this specific article, document, or webpage.
+    - Do not Explain by using 'The highlighted text...'. Just Explain it.
+    - Keep the explanation concise (3-4 lines).
 
-**Surrounding Context:**
-${currentContextText || currentSelection}
+    SELECTED TEXT:
+    [[[${currentSelection}]]]
 
----
-
-Explain the **Selected Text** in simple, very small, easy-to-understand English.
-Use the surrounding context to give better understanding when needed.
-Don't mention 'The selected text...' insted just give the explaination.
-Give the explanation in max 2 to 3 lines only.
-Use natural, friendly language. No bullet points. No markdown.`;
+    PAGE CONTEXT:
+    ${currentContextText || currentSelection}
+    `;
 
     try {
       const result = await runChain(cfg, userPrompt);
