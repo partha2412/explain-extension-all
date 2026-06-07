@@ -138,10 +138,11 @@ ${currentContextText || currentSelection}
 
 ---
 
-Explain the **Selected Text** in simple, easy-to-understand English.
+Explain the **Selected Text** in simple, very small, easy-to-understand English.
 Use the surrounding context to give better understanding when needed.
-Give the explanation in 3 to 4 lines only.
-Use natural, friendly language. No bullet points. No markdown. Don't mention 'The selected text...' insted just give the explaination.`;
+Don't mention 'The selected text...' insted just give the explaination.
+Give the explanation in 2 to 3 lines only.
+Use natural, friendly language. No bullet points. No markdown.`;
 
     try {
       const result = await runChain(cfg, userPrompt);
@@ -170,7 +171,7 @@ Use natural, friendly language. No bullet points. No markdown. Don't mention 'Th
     }, 60);
   });
 
-  document.addEventListener("mousedown", e => {
+  document.addEventListener("click", e => {
     if (tooltipEl && !tooltipEl.contains(e.target)) {
       removeTooltip();
     }
