@@ -14,7 +14,7 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "gpt-4o-mini",
-                    max_tokens: 200,
+                    max_tokens: cfg.maxTokens || 200,
                     messages: [
                         { role: "system", content: SYSTEM_PROMPT },
                         { role: "user", content: userPrompt }
@@ -39,7 +39,7 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "claude-haiku-4-5-20251001",
-                    max_tokens: 200,
+                    max_tokens: cfg.maxTokens || 200,
                     system: SYSTEM_PROMPT,
                     messages: [{ role: "user", content: userPrompt }]
                 })
@@ -81,7 +81,7 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "llama-3.1-8b-instant",
-                    max_tokens: 200,
+                    max_tokens: cfg.maxTokens || 200,
                     messages: [
                         { role: "system", content: SYSTEM_PROMPT },
                         { role: "user", content: userPrompt }
@@ -104,7 +104,7 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "mistral-small-latest",
-                    max_tokens: 200,
+                    max_tokens: cfg.maxTokens || 200,
                     messages: [
                         { role: "system", content: SYSTEM_PROMPT },
                         { role: "user", content: userPrompt }
@@ -127,7 +127,7 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "meta-llama/Llama-3.2-3B-Instruct-Turbo",
-                    max_tokens: 200,
+                    max_tokens: cfg.maxTokens || 200,
                     messages: [
                         { role: "system", content: SYSTEM_PROMPT },
                         { role: "user", content: userPrompt }
@@ -153,7 +153,7 @@ const PROVIDERS = {
                     },
                     body: JSON.stringify({
                         model,
-                        max_tokens: 200,
+                        max_tokens: cfg.maxTokens || 200,
                         messages: [
                             { role: "system", content: SYSTEM_PROMPT },
                             { role: "user", content: userPrompt }
@@ -197,7 +197,7 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "default",
-                    max_tokens: 200,
+                    max_tokens: cfg.maxTokens || 200,
                     messages: [
                         { role: "system", content: SYSTEM_PROMPT },
                         { role: "user", content: userPrompt }

@@ -48,6 +48,7 @@
 .et-error-card { border-color: #7f1d1d; background: linear-gradient(145deg, #1c0a0a, #1f1010); }
 
 .et-header {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -57,6 +58,36 @@
   letter-spacing: 0.1em;
   color: #6366f1;
   margin-bottom: 10px;
+}
+
+#copy-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 24px;
+  height: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  border: 1px solid #2e2e42;
+  border-radius: 6px;
+
+  color: #71717a;
+  cursor: pointer;
+  font-size: 12px;
+
+  transition: all 0.15s ease;
+}
+
+#copy-btn:hover {
+  background: #27272a;
+  border-color: #6366f1;
+  color: #a5b4fc;
 }
 
 .et-body {
