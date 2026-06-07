@@ -1,139 +1,152 @@
-# Explain This
-
 <div align="center">
 
-AI-powered Chrome Extension that explains selected text on any webpage using your preferred LLM.
+# Explain This
 
-Supports OpenAI, Claude, Gemini, Groq, Mistral, Together AI, Hugging Face, Ollama, and custom OpenAI-compatible APIs.
+AI-powered Chrome Extension that explains selected text anywhere on the web.
+
+Highlight text → Click Explain → Get a simple explanation instantly.
+
+Supports OpenAI, Claude, Gemini, Groq, Mistral, Hugging Face, Together AI, Ollama, and custom APIs.
 
 </div>
 
 ---
 
-## Overview
+## Demo
 
-Reading technical articles, research papers, documentation, blogs, or educational content often requires switching tabs to understand unfamiliar concepts.
+### Select Any Text
 
-**Explain This** solves that problem by allowing you to highlight any text on a webpage and instantly receive a simple, context-aware explanation without leaving the page.
+```text
+Quantum entanglement is a physical phenomenon...
+```
 
-The extension uses surrounding content to better understand the selected text and generate more accurate explanations.
+↓
+
+### Click Explain
+
+```text
+[ Explain ]
+```
+
+↓
+
+### Get a Simple Explanation
+
+```text
+Quantum entanglement is when two particles become connected
+so that a change in one can affect the other, even when
+they are far apart.
+```
+
+---
+
+## Why Use It?
+
+When reading:
+
+- Research Papers
+- Documentation
+- Technical Blogs
+- News Articles
+- Educational Content
+
+You often encounter difficult terms and concepts.
+
+Instead of opening a new tab and searching manually, simply highlight the text and let AI explain it directly on the page.
 
 ---
 
 ## Features
 
-✅ Highlight any text on any webpage
+✨ Explain selected text instantly
 
-✅ Context-aware explanations using surrounding content
+🧠 Context-aware explanations
 
-✅ Floating "Explain" button for quick access
+⚡ Floating one-click interface
 
-✅ Clean and modern dark UI
+🌐 Works on almost any website
 
-✅ Supports multiple AI providers
+🤖 Multiple AI providers
 
-✅ Automatic provider detection from API keys
+🏠 Local model support via Ollama
 
-✅ Local LLM support via Ollama
+🔒 Privacy friendly
 
-✅ No backend server required
-
-✅ API keys stored locally
-
-✅ Lightweight and fast
+🎨 Modern dark UI
 
 ---
 
-## Supported Providers
+## Supported AI Providers
 
-| Provider | Supported |
-|-----------|------------|
+| Provider | Support |
+|-----------|----------|
 | OpenAI | ✅ |
-| Anthropic Claude | ✅ |
-| Google Gemini | ✅ |
+| Claude | ✅ |
+| Gemini | ✅ |
 | Groq | ✅ |
-| Mistral AI | ✅ |
+| Mistral | ✅ |
 | Together AI | ✅ |
 | Hugging Face | ✅ |
 | Ollama | ✅ |
-| Custom OpenAI-Compatible APIs | ✅ |
+| Custom APIs | ✅ |
 
 ---
 
 ## Installation
 
-### Clone the Repository
+### 1. Clone Repository
 
 ```bash
 git clone https://github.com/partha2412/explain-extension-all.git
-cd explain-extension-all
 ```
 
-### Load into Chrome
+### 2. Open Chrome Extensions
 
-1. Open Chrome
-
-```
+```text
 chrome://extensions
 ```
 
-2. Enable **Developer Mode**
+### 3. Enable Developer Mode
 
-3. Click **Load unpacked**
+Turn on **Developer Mode** in the top-right corner.
 
-4. Select the project folder
+### 4. Load Extension
 
-5. Pin the extension from the Chrome toolbar
+Click:
 
-The extension is now ready to use.
+```text
+Load Unpacked
+```
+
+Select the project folder.
 
 ---
 
-## Configuration
+## Setup
 
-### Cloud AI Providers
+### Cloud Models
 
-1. Click the extension icon
+1. Open the extension popup
 2. Paste your API key
 3. Provider is detected automatically
-4. Select a model (optional)
-5. Click **Save Settings**
+4. Select a model
+5. Save settings
 
-### OpenAI Example
+### Ollama
 
-```text
-sk-xxxxxxxxxxxxxxxxxxxxxxxx
-```
-
-### Claude Example
-
-```text
-sk-ant-xxxxxxxxxxxxxxxx
-```
-
-### Gemini Example
-
-```text
-AIzaxxxxxxxxxxxxxxxx
-```
-
----
-
-## Using Ollama
-
-### Start Ollama
+Start Ollama:
 
 ```bash
 ollama serve
 ```
 
-### Pull a Model
+Pull a model:
 
 ```bash
 ollama pull llama3.2
 ```
 
-### Configure Extension
+Configure:
 
 ```text
 API Key: ollama
@@ -142,7 +155,7 @@ Base URL:
 http://localhost:11434
 ```
 
-Save settings and start using local models immediately.
+Save settings.
 
 ---
 
@@ -154,7 +167,7 @@ Open any webpage.
 
 ### Step 2
 
-Highlight a word, sentence, or paragraph.
+Highlight text.
 
 ### Step 3
 
@@ -162,42 +175,27 @@ Click the floating **Explain** button.
 
 ### Step 4
 
-Wait a few seconds while the AI processes the request.
-
-### Step 5
-
-Read the simplified explanation directly on the page.
+Receive an AI-generated explanation instantly.
 
 ---
 
 ## How It Works
 
 ```text
-User Selects Text
-        │
-        ▼
+Text Selection
+      ↓
 Context Extraction
-        │
-        ▼
+      ↓
 Prompt Generation
-        │
-        ▼
-Selected LLM Provider
-        │
-        ▼
-AI Response
-        │
-        ▼
-Floating Explanation Card
+      ↓
+AI Provider
+      ↓
+Explanation
+      ↓
+Floating Result Card
 ```
 
-The extension captures:
-
-- Selected text
-- ~350 characters before the selection
-- ~350 characters after the selection
-
-This additional context helps the model produce more relevant explanations.
+The extension uses the selected text along with nearby content to generate more accurate explanations.
 
 ---
 
@@ -215,97 +213,18 @@ This additional context helps the model produce more relevant explanations.
 └── README.md
 ```
 
-### Files
-
-| File | Purpose |
-|--------|---------|
-| manifest.json | Chrome extension configuration |
-| content.js | Selection handling and tooltip logic |
-| content.css | Extension styling |
-| llm.js | AI provider integrations |
-| popup.html | Settings UI |
-| popup.js | Configuration management |
-
 ---
 
 ## Privacy
-
-This project is designed with privacy in mind.
 
 - No backend server
 - No analytics
 - No tracking
 - API keys stored locally
-- Requests sent directly to the selected provider
-- Full control over your chosen AI model
-
----
-
-## Supported Models
-
-Examples include:
-
-### OpenAI
-
-- gpt-4o-mini
-- gpt-4o
-- gpt-4-turbo
-
-### Claude
-
-- Claude Haiku
-- Claude Sonnet
-- Claude Opus
-
-### Gemini
-
-- Gemini Flash
-- Gemini Pro
-
-### Ollama
-
-- llama3.2
-- llama3.1
-- mistral
-- phi3
-- gemma2
-- qwen2.5
-
-Custom models can also be entered manually.
-
----
-
-## Future Improvements
-
-- Streaming responses
-- Translation mode
-- Summarization mode
-- Explain images
-- Multiple explanation styles
-- Keyboard shortcuts
-- Response caching
-- Chat mode
-- Custom prompts
-
----
-
-## Contributing
-
-Contributions, suggestions, and bug reports are welcome.
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Open a Pull Request
+- Direct communication with AI providers
 
 ---
 
 ## License
 
 MIT License
-
-Feel free to use, modify, and distribute this project.
-
----
-
-Made for students, developers, researchers, and curious minds who want quick explanations without leaving the page.
