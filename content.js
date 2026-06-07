@@ -4,28 +4,35 @@
   let currentSelection = null;
   let currentContextText = null;
 
-  function getSurroundingContext(selectedText) {
-    const fullText = document.body.innerText || "";
-    const idx = fullText.indexOf(selectedText);
+  function getSurroundingContext() {
+    const selection = window.getSelection();
 
-    if (idx === -1) {
-      return selectedText; // Fallback
+    if (!selection.rangeCount) return "";
+
+    const range = selection.getRangeAt(0);
+
+    let node = range.commonAncestorContainer;
+
+    if (node.nodeType === Node.TEXT_NODE) {
+      node = node.parentElement;
     }
 
-    // Get context before and after
-    const before = fullText.slice(Math.max(0, idx - 1500), idx).trim();
-    const after = fullText.slice(
-      idx + selectedText.length,
-      idx + selectedText.length + 1500
-    ).trim();
+    const parent =
+      node.closest("article, section, main, p, div") || node;
 
-    // Clean up and combine
     let context = "";
-    if (before) context += before + " ";
-    context += selectedText + " ";
-    if (after) context += after;
 
-    return context.trim();
+    if (parent.previousElementSibling) {
+      context += parent.previousElementSibling.innerText + "\n\n";
+    }
+
+    context += parent.innerText + "\n\n";
+
+    if (parent.nextElementSibling) {
+      context += parent.nextElementSibling.innerText;
+    }
+
+    return context.slice(0, 4000);
   }
 
   function removeTooltip() {
@@ -232,7 +239,7 @@
 
       if (text && text.length > 3) {
         currentSelection = text;
-        currentContextText = getSurroundingContext(text);
+        currentContextText = getSurroundingContext();
 
         const rect = sel.getRangeAt(0).getBoundingClientRect();
         createTooltip(rect.left + rect.width / 2, rect.top);
