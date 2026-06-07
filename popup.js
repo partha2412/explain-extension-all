@@ -1,11 +1,11 @@
 const KEY_MAP = [
-  { prefix: "sk-ant-", provider: "anthropic", label: "Claude (Anthropic)" },
-  { prefix: "sk-proj-", provider: "openai", label: "OpenAI" },
-  { prefix: "sk-", provider: "openai", label: "OpenAI" },
-  { prefix: "AIza", provider: "gemini", label: "Google Gemini" },
-  { prefix: "gsk_", provider: "groq", label: "Groq" },
-  { prefix: "hf_", provider: "huggingface", label: "HuggingFace" },
-  { prefix: "tog_", provider: "together", label: "Together AI" },
+  { prefix: "sk-ant-",  provider: "anthropic",   label: "Claude (Anthropic)" },
+  { prefix: "sk-proj-", provider: "openai",       label: "OpenAI" },
+  { prefix: "sk-",      provider: "openai",       label: "OpenAI" },
+  { prefix: "AIza",     provider: "gemini",       label: "Google Gemini" },
+  { prefix: "gsk_",     provider: "groq",         label: "Groq" },
+  { prefix: "hf_",      provider: "huggingface",  label: "HuggingFace" },
+  { prefix: "tog_",     provider: "together",     label: "Together AI" },
 ];
 
 const MODELS = {
@@ -47,17 +47,17 @@ function detectProvider(key) {
 }
 
 // Elements
-const apiKeyInput = document.getElementById("api-key");
+const apiKeyInput  = document.getElementById("api-key");
 const baseUrlInput = document.getElementById("base-url");
-const modelInput = document.getElementById("model");
-const maxTokensEl = document.getElementById("max-tokens");
-const toggleVis = document.getElementById("toggle-vis");
-const saveBtn = document.getElementById("save-btn");
-const statusEl = document.getElementById("status");
-const badge = document.getElementById("detected-badge");
-const fieldUrl = document.getElementById("field-url");
-const fieldModel = document.getElementById("field-model");
-const modelPills = document.getElementById("model-pills");
+const modelInput   = document.getElementById("model");
+const maxTokensEl  = document.getElementById("max-tokens");
+const toggleVis    = document.getElementById("toggle-vis");
+const saveBtn      = document.getElementById("save-btn");
+const statusEl     = document.getElementById("status");
+const badge        = document.getElementById("detected-badge");
+const fieldUrl     = document.getElementById("field-url");
+const fieldModel   = document.getElementById("field-model");
+const modelPills   = document.getElementById("model-pills");
 
 let currentProvider = null;
 
@@ -138,10 +138,10 @@ saveBtn.addEventListener("click", () => {
   }
 
   const cfg = {
-    provider: detected.provider,
-    apiKey: isOllama ? null : key,
-    baseUrl: baseUrlInput.value.trim() || null,
-    model: modelInput.value.trim() || null,
+    provider:  detected.provider,
+    apiKey:    isOllama ? null : key,
+    baseUrl:   baseUrlInput.value.trim() || null,
+    model:     modelInput.value.trim()   || null,
     maxTokens: parseInt(maxTokensEl.value) || 200
   };
 
@@ -160,9 +160,9 @@ function flash(msg, color) {
 chrome.storage.local.get(["et_config"], r => {
   const cfg = r.et_config;
   if (!cfg) return;
-  if (cfg.apiKey) apiKeyInput.value = cfg.apiKey;
-  if (cfg.baseUrl) baseUrlInput.value = cfg.baseUrl;
-  if (cfg.maxTokens) maxTokensEl.value = cfg.maxTokens;
+  if (cfg.apiKey)    apiKeyInput.value  = cfg.apiKey;
+  if (cfg.baseUrl)   baseUrlInput.value = cfg.baseUrl;
+  if (cfg.maxTokens) maxTokensEl.value  = cfg.maxTokens;
 
   // Trigger detection + render pills with saved model pre-selected
   apiKeyInput.dispatchEvent(new Event("input"));
