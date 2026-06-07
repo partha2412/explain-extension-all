@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Explain This",
+  "version": "2.0.0",
+  "description": "Select any text to get a simple explanation powered by any LLM.",
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": [
+    "https://api.openai.com/*",
+    "https://api.anthropic.com/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.groq.com/*",
+    "https://api.mistral.ai/*",
+    "https://api.together.xyz/*",
+    "https://router.huggingface.co/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["llm.js", "content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Explain This"
+  }
+}
