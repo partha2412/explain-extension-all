@@ -1,4 +1,4 @@
-# Explain This
+# AI-powered browser extension
 
 AI-powered browser extension that lets users highlight any text on a webpage and instantly receive a simple, context-aware explanation using their preferred LLM provider.
 
