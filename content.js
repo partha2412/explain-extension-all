@@ -154,7 +154,7 @@ Use natural, friendly language. No bullet points. No markdown.`;
   }
 
   // Selection Handler
-  document.addEventListener("mouseup", e => {
+  document.addEventListener("click", e => {
     setTimeout(() => {
       const sel = window.getSelection();
       const text = sel?.toString().trim();
