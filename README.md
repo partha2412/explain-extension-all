@@ -224,6 +224,7 @@ The extension combines the selected text with nearby page content to generate co
 ├── content.css
 ├── llm.js
 ├── popup.html
+├── popup.css
 ├── popup.js
 ├── icon.svg
 ├── LICENSE
@@ -252,18 +253,6 @@ This project is licensed under a custom Non-Commercial License.
 Commercial use, resale, SaaS offerings, paid integrations, redistribution for profit, or monetization of this software is prohibited without prior written permission from the author.
 
 See the LICENSE file for full details.
-
----
-
-## Roadmap
-
-Planned future improvements:
-
-* Keyboard shortcuts
-* Streaming responses
-* Better page context extraction
-* Explanation history
-* Chrome Web Store release
 
 ---
 
