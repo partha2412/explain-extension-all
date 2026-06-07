@@ -58,6 +58,7 @@ const badge        = document.getElementById("detected-badge");
 const fieldUrl     = document.getElementById("field-url");
 const fieldModel   = document.getElementById("field-model");
 const modelPills   = document.getElementById("model-pills");
+const styleEl = document.getElementById("explain-style");
 
 let currentProvider = null;
 
@@ -104,7 +105,10 @@ apiKeyInput.addEventListener("input", () => {
   }
 
   if (!key) {
-    flash("Please enter an API key", "#f87171");
+    badge.textContent = "No key detected";
+    badge.className = "badge none";
+    fieldModel.classList.add("hidden");
+    fieldUrl.classList.add("hidden");
     return;
   }
   
@@ -147,7 +151,8 @@ saveBtn.addEventListener("click", () => {
     apiKey:    isOllama ? null : key,
     baseUrl:   baseUrlInput.value.trim() || null,
     model:     modelInput.value.trim()   || null,
-    maxTokens: parseInt(maxTokensEl.value) || 200
+    maxTokens: parseInt(maxTokensEl.value) || 200,
+    style: styleEl.value
   };
 
   chrome.storage.local.set({ et_config: cfg }, () => {
@@ -168,6 +173,7 @@ chrome.storage.local.get(["et_config"], r => {
   if (cfg.apiKey)    apiKeyInput.value  = cfg.apiKey;
   if (cfg.baseUrl)   baseUrlInput.value = cfg.baseUrl;
   if (cfg.maxTokens) maxTokensEl.value  = cfg.maxTokens;
+  if (cfg.style) styleEl.value = cfg.style;
 
   // Trigger detection + render pills with saved model pre-selected
   apiKeyInput.dispatchEvent(new Event("input"));

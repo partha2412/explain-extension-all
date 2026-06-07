@@ -220,3 +220,49 @@
     background: #3f3f46;
   }
 }
+
+#explain-style {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+
+  background: linear-gradient(145deg, #18181b, #1e1e2e);
+  border: 1px solid #2e2e42;
+  border-radius: 10px;
+
+  color: #e4e4e7;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 500;
+
+  outline: none;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+#explain-style:hover {
+  border-color: #4f46e5;
+}
+
+#explain-style:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+#explain-style option {
+  background: #18181b;
+  color: #e4e4e7;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+
+  color: #a5b4fc;
+  text-transform: uppercase;
+}

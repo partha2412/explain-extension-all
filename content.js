@@ -169,8 +169,34 @@
 
     showLoading();
 
+    let styleInstruction = "";
+
+    switch (cfg.style) {
+      case "eli5":
+        styleInstruction =
+          "Explain as if teaching a 10 year old child.";
+        break;
+
+      case "technical":
+        styleInstruction =
+          "Provide a technical explanation using proper terminology.";
+        break;
+
+      case "summary":
+        styleInstruction =
+          "Provide a concise summary.";
+        break;
+
+      default:
+        styleInstruction =
+          "Provide a normal explanation.";
+    }
+
     const userPrompt = `
     The user highlighted text while reading a webpage.
+
+    STYLE:
+      ${styleInstruction}
 
     Your task:
     - Understand what the highlighted text means IN THE CONTEXT OF THIS PAGE.
@@ -179,7 +205,7 @@
     - Do NOT behave like a dictionary.
     - Do NOT simply define words.
     - Explain what the selected text means in this specific article, document, or webpage.
-    - Do not Explain by using 'The highlighted text...'. Just Explain it.
+    - Do not Explain by using 'The highlighted text...' or 'The selected text...' etc Don't use these kind of texts. Just Explain it.
     - Keep the explanation concise (3-4 lines).
 
     SELECTED TEXT:
