@@ -3,6 +3,11 @@
   "name": "Explain This",
   "version": "2.0.0",
   "description": "Select any text to get a simple explanation powered by any LLM.",
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  },
   "permissions": ["activeTab", "storage"],
   "host_permissions": [
     "https://api.openai.com/*",
