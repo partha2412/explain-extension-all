@@ -2,11 +2,11 @@
 
 # Explain This
 
-AI-powered Chrome Extension that explains selected text anywhere on the web.
+AI-powered Chrome Extension that explains selected text anywhere on the web using your preferred LLM.
 
-Highlight text → Click Explain → Get a simple explanation instantly.
+**Highlight Text → Click Explain → Get an Instant AI Explanation**
 
-Supports OpenAI, Claude, Gemini, Groq, Mistral, Hugging Face, Together AI, Ollama, and custom APIs.
+Supports OpenAI, Claude, Gemini, Groq, Mistral, Hugging Face, Together AI, Ollama, and custom OpenAI-compatible APIs.
 
 </div>
 
@@ -17,82 +17,113 @@ Supports OpenAI, Claude, Gemini, Groq, Mistral, Hugging Face, Together AI, Ollam
 ### 1. Enter Your API Key and Save Settings
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/a0c96ea7-c328-4210-84ae-51d2f135af71" width="320" alt="Extension Settings">
+  <img src="https://github.com/user-attachments/assets/c5facd7a-5322-467c-852e-6e0a1ca37535" width="320" alt="Extension Settings">
 </p>
 
-The extension automatically detects the provider from your API key and lets you select a model before saving.
+The extension automatically detects your AI provider, suggests supported models, and lets you configure explanation preferences.
 
 ---
 
-### 2. Select Any Text and Click **Explain**
+### 2. Select Any Text and Click Explain
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/bf14cc34-c5af-4b33-a169-810c4e5f829e" width="700" alt="Select Text and Click Explain">
+  <img width="469" height="269" alt="image" src="https://github.com/user-attachments/assets/3fd4663e-4414-4118-b647-7498ae7e5b2d" />
 </p>
 
-Highlight any word, sentence, or paragraph on a webpage. A floating **Explain** button will appear near the selection.
+Highlight any word, sentence, code snippet, or paragraph. A floating **Explain** button appears directly beside the selection.
 
 ---
 
-### 3. Get an Instant Explanation
+### 3. Get an AI-Powered Explanation
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/ef89e99e-5069-451a-a0d3-3fa666a468ff" width="700" alt="Generated Explanation">
+  <img width="476" height="444" alt="image" src="https://github.com/user-attachments/assets/b0bfc581-cb19-4bb4-a75f-f7b92cf84d6c" />
 </p>
 
-The extension sends the selected text and surrounding context to your configured AI model and displays a concise explanation directly on the page.
+The extension sends the selected text together with surrounding page context to your configured AI model and displays a concise explanation directly on the page.
 
 ---
 
 ## Why Use It?
 
-When reading:
+While reading:
 
-- Research Papers
-- Documentation
-- Technical Blogs
-- News Articles
-- Educational Content
+* Research Papers
+* Documentation
+* Technical Blogs
+* News Articles
+* Educational Content
+* Tutorials
+* Code Examples
 
-You often encounter difficult terms and concepts.
+You often encounter concepts that need additional explanation.
 
-Instead of opening a new tab and searching manually, simply highlight the text and let AI explain it directly on the page.
+Instead of opening ChatGPT in another tab and manually copying text, simply highlight the content and let AI explain it instantly.
 
 ---
 
 ## Features
 
-✨ Explain selected text instantly
+### AI-Powered Explanations
 
-🧠 Context-aware explanations
+* Context-aware explanations
+* Uses surrounding page content for better understanding
+* Works with words, phrases, paragraphs, and code snippets
+* Avoids dictionary-style definitions whenever possible
 
-⚡ Floating one-click interface
+### Multiple Explanation Styles
 
-🌐 Works on almost any website
+Choose how explanations are generated:
 
-🤖 Multiple AI providers
+* Normal
+* ELI5 (Simple)
+* Technical
+* Summary
 
-🏠 Local model support via Ollama
+### Multi-Provider Support
 
-🔒 Privacy friendly
+* OpenAI
+* Claude
+* Gemini
+* Groq
+* Mistral
+* Together AI
+* Hugging Face
+* Ollama
+* Custom OpenAI-Compatible APIs
 
-🎨 Modern dark UI
+### User Experience
+
+* Floating one-click interface
+* Modern dark UI
+* Model selection
+* Copy explanation button
+* Loading skeleton animations
+* Automatic provider detection
+
+### Privacy Friendly
+
+* No backend server
+* No analytics
+* No tracking
+* API keys stored locally
+* Direct communication with providers
 
 ---
 
-## Supported AI Providers
+## Supported Providers
 
-| Provider | Support |
-|-----------|----------|
-| OpenAI | ✅ |
-| Claude | ✅ |
-| Gemini | ✅ |
-| Groq | ✅ |
-| Mistral | ✅ |
-| Together AI | ✅ |
-| Hugging Face | ✅ |
-| Ollama | ✅ |
-| Custom APIs | ✅ |
+| Provider           | Supported |
+| ------------------ | --------- |
+| OpenAI             | ✅         |
+| Claude (Anthropic) | ✅         |
+| Gemini             | ✅         |
+| Groq               | ✅         |
+| Mistral            | ✅         |
+| Together AI        | ✅         |
+| Hugging Face       | ✅         |
+| Ollama             | ✅         |
+| Custom APIs        | ✅         |
 
 ---
 
@@ -112,9 +143,9 @@ chrome://extensions
 
 ### 3. Enable Developer Mode
 
-Turn on **Developer Mode** in the top-right corner.
+Enable **Developer Mode** from the top-right corner.
 
-### 4. Load Extension
+### 4. Load the Extension
 
 Click:
 
@@ -122,7 +153,7 @@ Click:
 Load Unpacked
 ```
 
-Select the project folder.
+Select the cloned project folder.
 
 ---
 
@@ -131,12 +162,13 @@ Select the project folder.
 ### Cloud Models
 
 1. Open the extension popup
-2. Paste your API key
+2. Enter your API key
 3. Provider is detected automatically
 4. Select a model
-5. Save settings
+5. Choose an explanation style
+6. Save settings
 
-### Ollama
+### For Ollama
 
 Start Ollama:
 
@@ -144,13 +176,13 @@ Start Ollama:
 ollama serve
 ```
 
-Pull a model:
+Download a model:
 
 ```bash
 ollama pull llama3.2
 ```
 
-Configure:
+Configure the extension:
 
 ```text
 API Key: ollama
@@ -159,26 +191,27 @@ Base URL:
 http://localhost:11434
 ```
 
-Save settings.
+Save settings and start using local models.
 
+---
 
 ## How It Works
 
 ```text
-Text Selection
-      ↓
+User Selects Text
+        ↓
 Context Extraction
-      ↓
+        ↓
 Prompt Generation
-      ↓
-AI Provider
-      ↓
-Explanation
-      ↓
-Floating Result Card
+        ↓
+Selected AI Provider
+        ↓
+AI Response
+        ↓
+Floating Explanation Card
 ```
 
-The extension uses the selected text along with nearby content to generate more accurate explanations.
+The extension combines the selected text with nearby page content to generate context-aware explanations rather than simple dictionary definitions.
 
 ---
 
@@ -193,6 +226,7 @@ The extension uses the selected text along with nearby content to generate more 
 ├── popup.html
 ├── popup.js
 ├── icon.svg
+├── LICENSE
 └── README.md
 ```
 
@@ -200,11 +234,14 @@ The extension uses the selected text along with nearby content to generate more 
 
 ## Privacy
 
-- No backend server
-- No analytics
-- No tracking
-- API keys stored locally
-- Direct communication with AI providers
+Your data stays under your control.
+
+* No backend infrastructure
+* No cloud relay servers
+* No telemetry
+* No tracking
+* API keys stored locally using Chrome Storage
+* Requests sent directly to the provider you configure
 
 ---
 
@@ -212,6 +249,22 @@ The extension uses the selected text along with nearby content to generate more 
 
 This project is licensed under a custom Non-Commercial License.
 
-Commercial use, resale, SaaS offerings, and monetization of this software are prohibited without prior written permission from the author.
+Commercial use, resale, SaaS offerings, paid integrations, redistribution for profit, or monetization of this software is prohibited without prior written permission from the author.
 
-See the LICENSE file for details.
+See the LICENSE file for full details.
+
+---
+
+## Roadmap
+
+Planned future improvements:
+
+* Keyboard shortcuts
+* Streaming responses
+* Better page context extraction
+* Explanation history
+* Chrome Web Store release
+
+---
+
+Made with ❤️ for students, developers, researchers, and curious readers.
