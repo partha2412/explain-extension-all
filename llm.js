@@ -223,7 +223,7 @@ const PROVIDERS = {
                     "Authorization": `Bearer ${cfg.apiKey}`
                 },
                 body: JSON.stringify({
-                    model: cfg.model || "llama-3.1-8b-instant",
+                    model: cfg.model || "llama-3.3-70b-versatile",
                     temperature: mode.temperature,
                     max_tokens: cfg.maxTokens || 200,
                     messages: [

@@ -4,7 +4,7 @@
   let currentSelection = null;
   let currentContextText = null;
 
-  function getSurroundingContext() {
+  function getSurroundingContext(maxLen) {
     const selection = window.getSelection();
 
     if (!selection.rangeCount) return "";
@@ -32,7 +32,7 @@
       context += parent.nextElementSibling.innerText;
     }
 
-    return context.slice(0, 1500);
+    return context.slice(0, maxLen || 1500);
   }
 
   function removeTooltip() {
@@ -206,7 +206,10 @@
 
       if (text && text.length > 3) {
         currentSelection = text;
-        currentContextText = getSurroundingContext();
+        chrome.storage.local.get(["et_config"], r => {
+          const maxContext = r.et_config?.maxContext || 1500;
+          currentContextText = getSurroundingContext(maxContext);
+        });
 
         const rect = sel.getRangeAt(0).getBoundingClientRect();
         createTooltip(rect.left + rect.width / 2, rect.top);
@@ -227,7 +230,7 @@
   });
 
   document.addEventListener("scroll", () => {
-    if (tooltipEl) {
+    if (tooltipEl && !tooltipEl.querySelector(".et-card")) {
       removeTooltip();
     }
   });

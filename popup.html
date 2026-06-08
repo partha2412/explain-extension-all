@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <title>Explain This</title>
   <link rel="stylesheet" href="popup.css">
 </head>
@@ -22,8 +23,9 @@
 
 <!-- API Key -->
 
-<div class="label">API Key</div>
+
 <div class="field">
+  <label class="label">API Key</label>
   <div class="input-wrap">
     <input type="password" id="api-key" placeholder="Paste any API key..." autocomplete="off"/>
     <span class="show-toggle" id="toggle-vis">show</span>
@@ -68,21 +70,23 @@
 </div>
 
 <!-- Max Tokens -->
-
 <div class="tokens-row">
   <span class="label">Max Tokens</span>
   <input type="number" id="max-tokens" value="200" min="50" max="4000"/>
   <span style="font-size:10px;color:#3f3f46;">tokens per reply</span>
 </div>
 
+<div class="tokens-row">
+  <span class="label">Context Length</span>
+  <input type="number" id="max-context" value="1500" min="100" max="8000"/>
+  <span style="font-size:10px;color:#3f3f46;">chars of context</span>
+</div>
+
+<div class="divider"></div>
 <button class="save" id="save-btn">Save Settings</button>
 
 <div class="status" id="status"></div>
 
-<div class="hint">
-  OpenAI · Claude · Gemini · Groq · Mistral<br/>
-  Together · HuggingFace · Ollama · Custom
-</div>
 
 <script src="popup.js"></script>
 

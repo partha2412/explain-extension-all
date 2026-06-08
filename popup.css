@@ -80,6 +80,9 @@ body {
     font-family: inherit;
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .input-wrap input:focus {

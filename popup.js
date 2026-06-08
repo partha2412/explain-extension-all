@@ -156,13 +156,13 @@ saveBtn.addEventListener("click", () => {
   };
 
   chrome.storage.local.set({ et_config: cfg }, () => {
-    flash(`✓ Saved — ${detected.label}`, "#4ade80");
+    flash(`<i class="fa-solid fa-check"></i> Saved — ${detected.label}`, "#4ade80");
   });
 });
 
 function flash(msg, color) {
   statusEl.style.color = color;
-  statusEl.textContent = msg;
+  statusEl.innerHTML = msg;
   setTimeout(() => statusEl.textContent = "", 3000);
 }
 
