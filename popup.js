@@ -59,6 +59,8 @@ const fieldUrl     = document.getElementById("field-url");
 const fieldModel   = document.getElementById("field-model");
 const modelPills   = document.getElementById("model-pills");
 const styleEl = document.getElementById("explain-style");
+const maxSentences = document.getElementById("max-sentences");
+const maxWords = document.getElementById("max-words");
 
 let currentProvider = null;
 
@@ -152,6 +154,8 @@ saveBtn.addEventListener("click", () => {
     baseUrl:   baseUrlInput.value.trim() || null,
     model:     modelInput.value.trim()   || null,
     maxTokens: parseInt(maxTokensEl.value) || 200,
+    max_sentences: parseInt(maxSentences.value),
+    max_words: parseInt(maxWords.value),
     style: styleEl.value
   };
 
@@ -173,6 +177,8 @@ chrome.storage.local.get(["et_config"], r => {
   if (cfg.apiKey)    apiKeyInput.value  = cfg.apiKey;
   if (cfg.baseUrl)   baseUrlInput.value = cfg.baseUrl;
   if (cfg.maxTokens) maxTokensEl.value  = cfg.maxTokens;
+  if (cfg.max_sentences) maxSentences.value = cfg.max_sentences;
+  if (cfg.max_words) maxWords.value = cfg.max_words;
   if (cfg.style) styleEl.value = cfg.style;
 
   // Trigger detection + render pills with saved model pre-selected

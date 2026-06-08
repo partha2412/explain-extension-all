@@ -1,13 +1,14 @@
 // llm.js — loaded before content.js, exposes runChain() globally
 
-function buildPrompt(payload, mode) {
+function buildPrompt(payload, mode, max_sentence, max_words) {
     if (mode === "mcq")
         return `Question:\n${payload.text}`;
     if (mode === "qa")
         return `Question:\n${payload.text}\n\nContext:\n${payload.context || ""}`;
-    return `Text:\n${payload.text}\n\nContext:\n${payload.context || ""}`;
+    if (mode === "summary")
+        return `Text:\n${payload.text}\n\nContext:\n${payload.context || ""}`
+    return `Text:\n${payload.text}\n\nContext:\n${payload.context || ""}\n\nExplain directly.\nMaximum ${max_sentence} sentence.${parseInt(max_sentence) < 3 ? "\nMaximum 12 words." : "\nMaximum " + max_words + " words."}`;
 }
-
 const NORMAL_SYSTEM_PROMPT = `
     Explain the selected text using context.
     Keep it concise.
@@ -214,7 +215,9 @@ const PROVIDERS = {
             const mode = getMode(requestConfig);
             const userPrompt = buildPrompt(
                 payload,
-                requestConfig?.mode
+                requestConfig?.mode,
+                cfg.max_sentences,
+                cfg.max_words,
             );
             const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
