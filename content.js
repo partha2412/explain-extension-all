@@ -199,27 +199,26 @@
           "Provide a normal explanation.";
     }
 
+    const answerLength = 1;
+
     const userPrompt = `
-    The user highlighted text while reading a webpage.
+    Explain the meaning of the text below.
 
-    STYLE:
-      ${styleInstruction}
+    Use context when needed.
+    Return only the explanation.
+    No introductions.
+    Avoid dictionary-style definitions.
+    Avoid phrases like "refers to", "is the process of", "means", or "can be defined as".
+    Answer directly and naturally.
+    Max ${answerLength} sentence(s).
 
-    Your task:
-    - Understand what the highlighted text means IN THE CONTEXT OF THIS PAGE.
-    - Focus primarily on the selected text.
-    - Use the surrounding context to determine the author's intended meaning.
-    - Do NOT behave like a dictionary.
-    - Do NOT simply define words.
-    - Explain what the selected text means in this specific article, document, or webpage.
-    - Do not Explain by using 'The highlighted text...' or 'The selected text...' etc Don't use these kind of texts. Just Explain it.
-    - Keep the explanation concise (3-4 lines).
+    Style: ${styleInstruction}
 
-    SELECTED TEXT:
-    [[[${currentSelection}]]]
+    Text:
+    ${currentSelection}
 
-    PAGE CONTEXT:
-    ${currentContextText || currentSelection}
+    Context:
+    ${currentContextText}
     `;
 
     try {
