@@ -1,11 +1,132 @@
 // llm.js — loaded before content.js, exposes runChain() globally
 
-const SYSTEM_PROMPT = `You explain text in simple, clear language. The user has selected a portion of text marked with [[[...]]]. Use surrounding context to understand it better. Explain in 3-4 concise lines. No bullet points. No markdown. Just plain easy-to-read English.`;
+function buildPrompt(payload, mode) {
+    if (mode === "mcq")
+        return `Question:\n${payload.text}`;
+    if (mode === "qa")
+        return `Question:\n${payload.text}\n\nContext:\n${payload.context || ""}`;
+    return `Text:\n${payload.text}\n\nContext:\n${payload.context || ""}`;
+}
+
+const NORMAL_SYSTEM_PROMPT = `
+    Explain the selected text using context.
+    Keep it concise.
+    No markdown.
+    `;
+
+const TECHNICAL_PROMPT = `
+You explain technical concepts accurately and professionally.
+
+Rules:
+- Use proper technical terminology.
+- Be concise.
+- Focus on the selected text.
+- Use surrounding context when needed.
+- No introductions.
+- No bullet points.
+- No markdown.
+- Return only the explanation.
+`;
+
+const SUMMARY_PROMPT = `
+You summarize information clearly and briefly.
+
+Rules:
+- Focus on the main idea.
+- Ignore minor details.
+- Use surrounding context when needed.
+- Keep the answer very short.
+- No introductions.
+- No bullet points.
+- No markdown.
+- Return only the summary.
+`;
+
+const ELI5_PROMPT = `
+You explain concepts as if teaching a 10-year-old child.
+
+Rules:
+- Use very simple words.
+- Avoid jargon.
+- Use surrounding context when needed.
+- Keep the explanation short.
+- No introductions.
+- No bullet points.
+- No markdown.
+- Return only the explanation.
+`;
+
+const MCQ_SYSTEM_PROMPT = `
+You are an expert exam solver with deep knowledge across all subjects.
+
+Steps you MUST follow:
+1. Read the question carefully.
+2. Eliminate obviously wrong options first.
+3. From remaining options, pick the most accurate one.
+4. Return ONLY the correct option exactly as written.
+
+No explanation. No reasoning in output. Final answer only.
+`;
+
+const QA_SYSTEM_PROMPT = `
+Answer the question accurately.
+
+Rules:
+- If options exist, choose the correct option.
+- Return the option exactly as written.
+- If no options exist, return only the answer.
+- Do not explain.
+- Do not justify.
+- Do not repeat the question.
+- Return a single final answer only.
+`;
+
+const MODES = {
+
+    eli5: {
+        temperature: 0.4,
+        systemPrompt: ELI5_PROMPT
+    },
+
+    normal: {
+        temperature: 0.4,
+        systemPrompt: NORMAL_SYSTEM_PROMPT
+    },
+
+    technical: {
+        temperature: 0.2,
+        systemPrompt: TECHNICAL_PROMPT
+    },
+
+    summary: {
+        temperature: 0.3,
+        systemPrompt: SUMMARY_PROMPT
+    },
+
+    mcq: {
+        temperature: 0,
+        systemPrompt: MCQ_SYSTEM_PROMPT
+    },
+    qa: {
+        temperature: 0,
+        top_p: 0.1,
+        systemPrompt: QA_SYSTEM_PROMPT
+    }
+};
+
+function getMode(requestConfig) {
+    return MODES[requestConfig?.mode] || MODES.normal;
+}
 
 const PROVIDERS = {
 
     openai: {
-        async invoke(cfg, userPrompt) {
+        async invoke(cfg, payload, requestConfig) {
+            const mode = getMode(requestConfig);
+            const userPrompt = buildPrompt(
+                payload,
+                requestConfig?.mode
+            );
             const res = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -15,8 +136,12 @@ const PROVIDERS = {
                 body: JSON.stringify({
                     model: cfg.model || "gpt-4o-mini",
                     max_tokens: cfg.maxTokens || 200,
+                    temperature: mode.temperature,
                     messages: [
-                        { role: "system", content: SYSTEM_PROMPT },
+                        {
+                            role: "system",
+                            content: mode.systemPrompt
+                        },
                         { role: "user", content: userPrompt }
                     ]
                 })
@@ -28,7 +153,12 @@ const PROVIDERS = {
     },
 
     anthropic: {
-        async invoke(cfg, userPrompt) {
+        async invoke(cfg, payload, requestConfig) {
+            const mode = getMode(requestConfig);
+            const userPrompt = buildPrompt(
+                payload,
+                requestConfig?.mode
+            );
             const res = await fetch("https://api.anthropic.com/v1/messages", {
                 method: "POST",
                 headers: {
@@ -40,7 +170,7 @@ const PROVIDERS = {
                 body: JSON.stringify({
                     model: cfg.model || "claude-haiku-4-5-20251001",
                     max_tokens: cfg.maxTokens || 200,
-                    system: SYSTEM_PROMPT,
+                    system: mode.systemPrompt,
                     messages: [{ role: "user", content: userPrompt }]
                 })
             });
@@ -51,7 +181,12 @@ const PROVIDERS = {
     },
 
     gemini: {
-        async invoke(cfg, userPrompt) {
+        async invoke(cfg, payload, requestConfig) {
+            const mode = getMode(requestConfig);
+            const userPrompt = buildPrompt(
+                payload,
+                requestConfig?.mode
+            );
             const model = cfg.model || "gemini-2.0-flash";
             const res = await fetch(
                 `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cfg.apiKey}`,
@@ -59,9 +194,12 @@ const PROVIDERS = {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+                        system_instruction: { parts: [{ text: mode.systemPrompt }] },
                         contents: [{ parts: [{ text: userPrompt }] }],
-                        generationConfig: { maxOutputTokens: 200, temperature: 0.4 }
+                        generationConfig: {
+                            maxOutputTokens: cfg.maxTokens || 200,
+                            temperature: mode.temperature
+                        }
                     })
                 }
             );
@@ -72,7 +210,12 @@ const PROVIDERS = {
     },
 
     groq: {
-        async invoke(cfg, userPrompt) {
+        async invoke(cfg, payload, requestConfig) {
+            const mode = getMode(requestConfig);
+            const userPrompt = buildPrompt(
+                payload,
+                requestConfig?.mode
+            );
             const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -81,9 +224,13 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "llama-3.1-8b-instant",
+                    temperature: mode.temperature,
                     max_tokens: cfg.maxTokens || 200,
                     messages: [
-                        { role: "system", content: SYSTEM_PROMPT },
+                        {
+                            role: "system",
+                            content: mode.systemPrompt
+                        },
                         { role: "user", content: userPrompt }
                     ]
                 })
@@ -95,7 +242,12 @@ const PROVIDERS = {
     },
 
     mistral: {
-        async invoke(cfg, userPrompt) {
+        async invoke(cfg, payload, requestConfig) {
+            const mode = getMode(requestConfig);
+            const userPrompt = buildPrompt(
+                payload,
+                requestConfig?.mode
+            );
             const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -104,9 +256,13 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "mistral-small-latest",
+                    temperature: mode.temperature,
                     max_tokens: cfg.maxTokens || 200,
                     messages: [
-                        { role: "system", content: SYSTEM_PROMPT },
+                        {
+                            role: "system",
+                            content: mode.systemPrompt
+                        },
                         { role: "user", content: userPrompt }
                     ]
                 })
@@ -118,7 +274,12 @@ const PROVIDERS = {
     },
 
     together: {
-        async invoke(cfg, userPrompt) {
+        async invoke(cfg, payload, requestConfig) {
+            const mode = getMode(requestConfig);
+            const userPrompt = buildPrompt(
+                payload,
+                requestConfig?.mode
+            );
             const res = await fetch("https://api.together.xyz/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -127,9 +288,13 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "meta-llama/Llama-3.2-3B-Instruct-Turbo",
+                    temperature: mode.temperature,
                     max_tokens: cfg.maxTokens || 200,
                     messages: [
-                        { role: "system", content: SYSTEM_PROMPT },
+                        {
+                            role: "system",
+                            content: mode.systemPrompt
+                        },
                         { role: "user", content: userPrompt }
                     ]
                 })
@@ -141,8 +306,15 @@ const PROVIDERS = {
     },
 
     huggingface: {
-        async invoke(cfg, userPrompt) {
-            const model = cfg.model || "mistralai/Mistral-7B-Instruct-v0.3";
+        async invoke(cfg, payload, requestConfig) {
+            const mode = getMode(requestConfig);
+            const userPrompt = buildPrompt(
+                payload,
+                requestConfig?.mode
+            );
+            const model =
+                cfg.model ||
+                "mistralai/Mistral-7B-Instruct-v0.3";
             const res = await fetch(
                 `https://router.huggingface.co/hf-inference/models/${model}/v1/chat/completions`,
                 {
@@ -153,9 +325,13 @@ const PROVIDERS = {
                     },
                     body: JSON.stringify({
                         model,
+                        temperature: mode.temperature,
                         max_tokens: cfg.maxTokens || 200,
                         messages: [
-                            { role: "system", content: SYSTEM_PROMPT },
+                            {
+                                role: "system",
+                                content: mode.systemPrompt
+                            },
                             { role: "user", content: userPrompt }
                         ]
                     })
@@ -168,7 +344,12 @@ const PROVIDERS = {
     },
 
     ollama: {
-        async invoke(cfg, userPrompt) {
+        async invoke(cfg, payload, requestConfig) {
+            const mode = getMode(requestConfig);
+            const userPrompt = buildPrompt(
+                payload,
+                requestConfig?.mode
+            );
             const base = (cfg.baseUrl || "http://localhost:11434").replace(/\/$/, "");
             const res = await fetch(`${base}/api/chat`, {
                 method: "POST",
@@ -176,19 +357,32 @@ const PROVIDERS = {
                 body: JSON.stringify({
                     model: cfg.model || "llama3.2",
                     stream: false,
+                    options: {
+                        temperature: mode.temperature
+                    },
                     messages: [
-                        { role: "system", content: SYSTEM_PROMPT },
+                        {
+                            role: "system",
+                            content: mode.systemPrompt
+                        },
                         { role: "user", content: userPrompt }
                     ]
                 })
             });
             const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Ollama request failed.");
+            if (!data.message?.content) throw new Error("Ollama returned an empty response.");
             return data.message.content;
         }
     },
 
     custom: {
-        async invoke(cfg, userPrompt) {
+        async invoke(cfg, payload, requestConfig) {
+            const mode = getMode(requestConfig);
+            const userPrompt = buildPrompt(
+                payload,
+                requestConfig?.mode
+            );
             const res = await fetch(cfg.baseUrl, {
                 method: "POST",
                 headers: {
@@ -197,27 +391,41 @@ const PROVIDERS = {
                 },
                 body: JSON.stringify({
                     model: cfg.model || "default",
+                    temperature: mode.temperature,
                     max_tokens: cfg.maxTokens || 200,
                     messages: [
-                        { role: "system", content: SYSTEM_PROMPT },
+                        {
+                            role: "system",
+                            content: mode.systemPrompt
+                        },
                         { role: "user", content: userPrompt }
                     ]
                 })
             });
             const data = await res.json();
-            return (
+            const result =
                 data.choices?.[0]?.message?.content ||
                 data.content?.[0]?.text ||
                 data.candidates?.[0]?.content?.parts?.[0]?.text ||
-                data.response || data.text || data.output
-            );
+                data.response || data.text || data.output;
+
+            if (!result) throw new Error("Custom provider returned an unrecognised response shape.");
+            return result;
         }
     }
 };
 
 // Global function called by content.js
-async function runChain(cfg, userPrompt) {
+async function runChain(cfg, payload, requestConfig) {
     const provider = PROVIDERS[cfg.provider];
-    if (!provider) throw new Error(`Unknown provider: ${cfg.provider}`);
-    return await provider.invoke(cfg, userPrompt);
+
+    if (!provider) {
+        throw new Error(`Unknown provider: ${cfg.provider}`);
+    }
+
+    return provider.invoke(
+        cfg,
+        payload,
+        requestConfig
+    );
 }

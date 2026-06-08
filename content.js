@@ -32,7 +32,7 @@
       context += parent.nextElementSibling.innerText;
     }
 
-    return context.slice(0, 4000);
+    return context.slice(0, 1500);
   }
 
   function removeTooltip() {
@@ -176,79 +176,21 @@
 
     showLoading();
 
-    let styleInstruction = "";
-
-    switch (cfg.style) {
-      case "eli5":
-        styleInstruction =
-          "Explain as if teaching a 10 year old child.";
-        break;
-
-      case "technical":
-        styleInstruction =
-          "Provide a technical explanation using proper terminology.";
-        break;
-
-      case "summary":
-        styleInstruction =
-          "Provide a concise summary.";
-        break;
-
-      case "mcq":
-        styleInstruction =
-          "Answer the multiple-choice question. Return ONLY the correct answer text. No explanation.";
-        break;
-
-      default:
-        styleInstruction =
-          "Provide a normal explanation.";
-    }
-
-    const answerLength = 1;
-
-    let userPrompt;
-
-    if (cfg.style === "mcq") {
-      userPrompt = `
-      You are solving a multiple-choice exam question.
-
-      Rules:
-      - Read the question carefully.
-      - Analyze all options before answering.
-      - Select the single best answer.
-      - Return ONLY the exact option text.
-      - No explanation.
-      - No reasoning.
-      - No extra words.
-      - The answer MUST be one of the provided options.
-
-      Question:
-      ${currentSelection}
-      `;
-    } else {
-      userPrompt = `
-        Explain the meaning of the text below.
-
-        Use context when needed.
-        Return only the explanation.
-        No introductions.
-        Avoid dictionary-style definitions.
-        Avoid phrases like "refers to", "is the process of", "means", or "can be defined as".
-        Answer directly and naturally.
-        Max ${answerLength} sentence(s).
-
-        Style: ${styleInstruction}
-
-        Text:
-        ${currentSelection}
-
-        Context:
-        ${currentContextText}
-        `;
-    }
+    const payload = {
+      text: currentSelection,
+      context: currentContextText
+    };
 
     try {
-      const result = await runChain(cfg, userPrompt);
+      const requestConfig = {
+        mode: cfg.style || "normal"
+      };
+
+      const result = await runChain(
+        cfg,
+        payload,
+        requestConfig
+      );
       showResult(result);
     } catch (err) {
       console.error(err);
@@ -276,12 +218,16 @@
 
   document.addEventListener("mouseup", e => {
     if (tooltipEl && !tooltipEl.contains(e.target)) {
-      removeTooltip();
+      const sel = window.getSelection();
+      const text = sel?.toString().trim();
+      if (!text || text.length <= 3) {
+        removeTooltip();
+      }
     }
   });
 
   document.addEventListener("scroll", () => {
-    if (tooltipEl && !tooltipEl.querySelector(".et-card")) {
+    if (tooltipEl) {
       removeTooltip();
     }
   });
