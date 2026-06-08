@@ -1,0 +1,24 @@
+name: Build Extension
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create ZIP
+        run: |
+          zip -r explain-this.zip . \
+          -x "*.git*" \
+          -x "node_modules/*"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extension
+          path: explain-this.zip
