@@ -4,6 +4,11 @@
   let currentSelection = null;
   let currentContextText = null;
 
+  const fa = document.createElement("link");
+  fa.rel = "stylesheet";
+  fa.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css";
+  document.head.appendChild(fa);
+
   function getSurroundingContext(maxLen) {
     const selection = window.getSelection();
 
@@ -100,12 +105,7 @@
           </svg>
           Explanation
           <button id="copy-btn" title="Copy">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
+            <i class="fa-solid fa-copy"></i>
           </button>
         </div>
         <div class="et-body"></div>
@@ -122,19 +122,11 @@
         await navigator.clipboard.writeText(content);
 
         const btn = document.getElementById("copy-btn");
-
-        btn.innerHTML = "✓";
-
+        // right
+        btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+        // copy
         setTimeout(() => {
-          btn.innerHTML = `
-      <svg width="12" height="12" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round"
-           stroke-linejoin="round">
-        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-      </svg>
-    `;
+          btn.innerHTML = `<i class="fa-solid fa-copy"></i>`;
         }, 1200);
 
       } catch (err) {
