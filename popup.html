@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -20,6 +21,7 @@
 </div>
 
 <!-- API Key -->
+
 <div class="label">API Key</div>
 <div class="field">
   <div class="input-wrap">
@@ -32,6 +34,7 @@
 </div>
 
 <!-- Ollama URL — only shown for Ollama -->
+
 <div class="field hidden" id="field-url">
   <div class="label">Base URL</div>
   <div class="input-wrap">
@@ -40,6 +43,7 @@
 </div>
 
 <!-- Model selector — appears after detection -->
+
 <div class="field hidden" id="field-model">
   <div class="label">Model</div>
   <div class="model-pills" id="model-pills"></div>
@@ -54,14 +58,16 @@
   <label for="explain-style">Explanation Style</label>
 
   <select id="explain-style">
+    <option value="eli5">Easy</option>
     <option value="normal">Normal</option>
-    <option value="eli5">ELI5 (Simple)</option>
     <option value="technical">Technical</option>
     <option value="summary">Summary</option>
+    <option value="mcq">MCQ Solver</option>
   </select>
 </div>
 
 <!-- Max Tokens -->
+
 <div class="tokens-row">
   <span class="label">Max Tokens</span>
   <input type="number" id="max-tokens" value="200" min="50" max="4000"/>
@@ -69,6 +75,7 @@
 </div>
 
 <button class="save" id="save-btn">Save Settings</button>
+
 <div class="status" id="status"></div>
 
 <div class="hint">
@@ -77,5 +84,6 @@
 </div>
 
 <script src="popup.js"></script>
+
 </body>
 </html>

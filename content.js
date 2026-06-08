@@ -194,6 +194,11 @@
           "Provide a concise summary.";
         break;
 
+      case "mcq":
+        styleInstruction =
+          "Answer the multiple-choice question. Return ONLY the correct answer text. No explanation.";
+        break;
+
       default:
         styleInstruction =
           "Provide a normal explanation.";
@@ -201,25 +206,46 @@
 
     const answerLength = 1;
 
-    const userPrompt = `
-    Explain the meaning of the text below.
+    let userPrompt;
 
-    Use context when needed.
-    Return only the explanation.
-    No introductions.
-    Avoid dictionary-style definitions.
-    Avoid phrases like "refers to", "is the process of", "means", or "can be defined as".
-    Answer directly and naturally.
-    Max ${answerLength} sentence(s).
+    if (cfg.style === "mcq") {
+      userPrompt = `
+      You are solving a multiple-choice exam question.
 
-    Style: ${styleInstruction}
+      Rules:
+      - Read the question carefully.
+      - Analyze all options before answering.
+      - Select the single best answer.
+      - Return ONLY the exact option text.
+      - No explanation.
+      - No reasoning.
+      - No extra words.
+      - The answer MUST be one of the provided options.
 
-    Text:
-    ${currentSelection}
+      Question:
+      ${currentSelection}
+      `;
+    } else {
+      userPrompt = `
+        Explain the meaning of the text below.
 
-    Context:
-    ${currentContextText}
-    `;
+        Use context when needed.
+        Return only the explanation.
+        No introductions.
+        Avoid dictionary-style definitions.
+        Avoid phrases like "refers to", "is the process of", "means", or "can be defined as".
+        Answer directly and naturally.
+        Max ${answerLength} sentence(s).
+
+        Style: ${styleInstruction}
+
+        Text:
+        ${currentSelection}
+
+        Context:
+        ${currentContextText}
+        `;
+    }
 
     try {
       const result = await runChain(cfg, userPrompt);
