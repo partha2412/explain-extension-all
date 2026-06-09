@@ -16,7 +16,7 @@ const MODELS = {
     "claude-haiku-4-5-20251001", "claude-sonnet-4-20250514", "claude-opus-4-20250514"
   ],
   gemini: [
-    "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.5-pro"
+    "gemini-3.1-flash-lite-preview", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro"
   ],
   groq: [
     "llama-3.1-8b-instant", "llama-3.3-70b-versatile", "mixtral-8x7b-32768", "gemma2-9b-it"
@@ -29,8 +29,8 @@ const MODELS = {
     "mistralai/Mixtral-8x7B-Instruct-v0.1", "Qwen/Qwen2.5-72B-Instruct-Turbo"
   ],
   huggingface: [
-    "mistralai/Mistral-7B-Instruct-v0.3", "HuggingFaceH4/zephyr-7b-beta",
-    "Qwen/Qwen2.5-7B-Instruct", "microsoft/Phi-3.5-mini-instruct"
+    "deepseek-ai/DeepSeek-R1:fastest",
+    "Qwen/Qwen2.5-7B-Instruct:together", "moonshotai/Kimi-K2-Instruct-0905"
   ],
   ollama: [
     "llama3.2", "llama3.1", "mistral", "phi3", "gemma2", "qwen2.5"

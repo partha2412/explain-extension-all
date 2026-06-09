@@ -126,7 +126,9 @@ const PROVIDERS = {
             const mode = getMode(requestConfig);
             const userPrompt = buildPrompt(
                 payload,
-                requestConfig?.mode
+                requestConfig?.mode,
+                cfg.max_sentences,
+                cfg.max_words,
             );
             const res = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
@@ -158,7 +160,9 @@ const PROVIDERS = {
             const mode = getMode(requestConfig);
             const userPrompt = buildPrompt(
                 payload,
-                requestConfig?.mode
+                requestConfig?.mode,
+                cfg.max_sentences,
+                cfg.max_words,
             );
             const res = await fetch("https://api.anthropic.com/v1/messages", {
                 method: "POST",
@@ -186,9 +190,11 @@ const PROVIDERS = {
             const mode = getMode(requestConfig);
             const userPrompt = buildPrompt(
                 payload,
-                requestConfig?.mode
+                requestConfig?.mode,
+                cfg.max_sentences,
+                cfg.max_words,
             );
-            const model = cfg.model || "gemini-2.0-flash";
+            const model = cfg.model || "gemini-3.1-flash-lite-preview";
             const res = await fetch(
                 `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cfg.apiKey}`,
                 {
@@ -249,7 +255,9 @@ const PROVIDERS = {
             const mode = getMode(requestConfig);
             const userPrompt = buildPrompt(
                 payload,
-                requestConfig?.mode
+                requestConfig?.mode,
+                cfg.max_sentences,
+                cfg.max_words,
             );
             const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
                 method: "POST",
@@ -281,7 +289,9 @@ const PROVIDERS = {
             const mode = getMode(requestConfig);
             const userPrompt = buildPrompt(
                 payload,
-                requestConfig?.mode
+                requestConfig?.mode,
+                cfg.max_sentences,
+                cfg.max_words,
             );
             const res = await fetch("https://api.together.xyz/v1/chat/completions", {
                 method: "POST",
@@ -313,13 +323,14 @@ const PROVIDERS = {
             const mode = getMode(requestConfig);
             const userPrompt = buildPrompt(
                 payload,
-                requestConfig?.mode
+                requestConfig?.mode,
+                cfg.max_sentences,
+                cfg.max_words,
             );
-            const model =
-                cfg.model ||
-                "mistralai/Mistral-7B-Instruct-v0.3";
+            const model = cfg.model || "deepseek-ai/DeepSeek-R1:fastest";
+
             const res = await fetch(
-                `https://router.huggingface.co/hf-inference/models/${model}/v1/chat/completions`,
+                `https://router.huggingface.co/v1/chat/completions`, // new URL
                 {
                     method: "POST",
                     headers: {
@@ -327,19 +338,22 @@ const PROVIDERS = {
                         "Authorization": `Bearer ${cfg.apiKey}`
                     },
                     body: JSON.stringify({
-                        model,
+                        model,  // model goes in body, not URL
                         temperature: mode.temperature,
                         max_tokens: cfg.maxTokens || 200,
                         messages: [
-                            {
-                                role: "system",
-                                content: mode.systemPrompt
-                            },
+                            { role: "system", content: mode.systemPrompt },
                             { role: "user", content: userPrompt }
                         ]
                     })
                 }
             );
+
+            if (!res.ok) {
+                const errText = await res.text();
+                throw new Error(`HuggingFace API error ${res.status}: ${errText}`);
+            }
+
             const data = await res.json();
             if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
             return data.choices[0].message.content;
@@ -351,7 +365,9 @@ const PROVIDERS = {
             const mode = getMode(requestConfig);
             const userPrompt = buildPrompt(
                 payload,
-                requestConfig?.mode
+                requestConfig?.mode,
+                cfg.max_sentences,
+                cfg.max_words,
             );
             const base = (cfg.baseUrl || "http://localhost:11434").replace(/\/$/, "");
             const res = await fetch(`${base}/api/chat`, {
@@ -384,7 +400,9 @@ const PROVIDERS = {
             const mode = getMode(requestConfig);
             const userPrompt = buildPrompt(
                 payload,
-                requestConfig?.mode
+                requestConfig?.mode,
+                cfg.max_sentences,
+                cfg.max_words,
             );
             const res = await fetch(cfg.baseUrl, {
                 method: "POST",
