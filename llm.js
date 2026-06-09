@@ -7,7 +7,7 @@ function buildPrompt(payload, mode, max_sentence, max_words) {
         return `Question:\n${payload.text}\n\nContext:\n${payload.context || ""}`;
     if (mode === "summary")
         return `Text:\n${payload.text}\n\nContext:\n${payload.context || ""}`
-    return `Text:\n${payload.text}\n\nContext:\n${payload.context || ""}\n\nExplain directly.\nMaximum ${max_sentence} sentence.${parseInt(max_sentence) < 3 ? "\nMaximum 12 words." : "\nMaximum " + max_words + " words."}`;
+    return `Text:\n${payload.text}\n\nContext:\n${payload.context || ""}\n\nExplain directly.\nMaximum ${max_sentence} sentence.${parseInt(max_sentence) < 2 ? "\nMaximum 12 words." : "\nMaximum " + max_words + " words."}`;
 }
 const NORMAL_SYSTEM_PROMPT = `
     Explain the selected text using context.
