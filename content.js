@@ -185,8 +185,12 @@
       );
       showResult(result);
     } catch (err) {
-      console.error(err);
-      showError(err.message || "Something went wrong. Please try again.");
+      let msg = err.message || "Something went wrong.";
+      try {
+        const parsed = JSON.parse(msg);
+        msg = parsed.error?.message || msg;
+      } catch { }
+      showError(msg);
     }
   }
 

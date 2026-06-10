@@ -351,7 +351,12 @@ const PROVIDERS = {
 
             if (!res.ok) {
                 const errText = await res.text();
-                throw new Error(`HuggingFace API error ${res.status}: ${errText}`);
+                try {
+                    const errJson = JSON.parse(errText);
+                    throw new Error(errJson.error?.message || errText);
+                } catch {
+                    throw new Error(errText);
+                }
             }
 
             const data = await res.json();
