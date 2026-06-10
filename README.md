@@ -17,7 +17,7 @@ Supports OpenAI, Claude, Gemini, Groq, Mistral, Hugging Face, Together AI, Ollam
 ### 1. Enter Your API Key and Save Settings
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c5facd7a-5322-467c-852e-6e0a1ca37535" width="320" alt="Extension Settings">
+  <img width="226" height="448" alt="image" src="https://github.com/user-attachments/assets/c2f762fe-a5b3-41b7-ba4c-571d6d888475" />
 </p>
 
 The extension automatically detects your AI provider, suggests supported models, and lets you configure explanation preferences.
@@ -75,10 +75,11 @@ Instead of opening ChatGPT in another tab and manually copying text, simply high
 
 Choose how explanations are generated:
 
+* Easy
 * Normal
-* ELI5 (Simple)
 * Technical
 * Summary
+* Questiona Answer
 
 ### Multi-Provider Support
 
@@ -166,7 +167,8 @@ Select the cloned project folder.
 3. Provider is detected automatically
 4. Select a model
 5. Choose an explanation style
-6. Save settings
+6. Setup Sentences limit, Words limit
+7. Save settings
 
 ### For Ollama
 
