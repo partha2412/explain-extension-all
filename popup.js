@@ -29,7 +29,7 @@ const MODELS = {
     "mistralai/Mixtral-8x7B-Instruct-v0.1", "Qwen/Qwen2.5-72B-Instruct-Turbo"
   ],
   huggingface: [
-    "deepseek-ai/DeepSeek-R1:fastest",
+    "deepseek-ai/DeepSeek-R1:fastest", "meta-llama/Llama-3.3-70B-Instruct:together", "Qwen/Qwen2.5-72B-Instruct",
     "Qwen/Qwen2.5-7B-Instruct:together", "moonshotai/Kimi-K2-Instruct-0905"
   ],
   ollama: [
