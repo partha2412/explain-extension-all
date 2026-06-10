@@ -7,15 +7,26 @@
 }
 
 body {
-    width: 300px;
+    width: 340px;
+    max-height: 580px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
     background: #0a0a0c;
     color: #e4e4e7;
     font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
     padding: 18px;
 }
 
+body::-webkit-scrollbar {
+    display: none;
+    /* ✅ hide scrollbar Chrome */
+}
+
 /* ── Header ── */
 .header {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -62,7 +73,7 @@ body {
 
 /* ── Fields ── */
 .field {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .input-wrap {
@@ -186,7 +197,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
 }
 
 .tokens-row .label {
@@ -216,7 +227,7 @@ body {
 .divider {
     height: 1px;
     background: #18181b;
-    margin: 14px 0;
+    margin: 10px 0;
 }
 
 /* ── Save button ── */
