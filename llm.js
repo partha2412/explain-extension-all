@@ -206,7 +206,7 @@ const PROVIDERS = {
                 cfg.max_sentences,
                 cfg.max_words,
             );
-            console.log(mode);
+            // console.log(mode);
             
             const model = cfg.model || "gemini-3.1-flash-lite-preview";
             const res = await fetch(
