@@ -1,6 +1,6 @@
 // llm.js — loaded before content.js, exposes runChain() globally
 
-function buildPrompt(payload, mode, max_sentence, max_words) {
+function buildPrompt(payload, mode, max_sentence, max_words) {    
     if (mode === "mcq")
         return `Question:\n${payload.text}`;
     if (mode === "qa")
@@ -29,6 +29,13 @@ Rules:
 - Return only the explanation.
 `;
 
+const DEBUG_CODE = `
+You are a code debugger, check the provided code vary carefully and tell me is the code is ok or not.
+If code have some issue then correct code and reply minimum words.
+If code is correct then Explain the code in easy & minimal steps.
+And mention the time & space complexity if possible.
+Each line contain 44 character, make points on these lines
+`;
 const SUMMARY_PROMPT = `
 You summarize information clearly and briefly.
 
@@ -97,6 +104,11 @@ const MODES = {
     technical: {
         temperature: 0.2,
         systemPrompt: TECHNICAL_PROMPT
+    },
+
+    debug_code: {
+        temperature: 0.7,
+        systemPrompt: DEBUG_CODE
     },
 
     summary: {
@@ -194,6 +206,8 @@ const PROVIDERS = {
                 cfg.max_sentences,
                 cfg.max_words,
             );
+            console.log(mode);
+            
             const model = cfg.model || "gemini-3.1-flash-lite-preview";
             const res = await fetch(
                 `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cfg.apiKey}`,

@@ -230,18 +230,19 @@
       removeTooltip();
     }
   });
-  // // Clipboard approach for Monaco (LeetCode)
-  // document.addEventListener('copy', e => {
-  //   setTimeout(() => {
-  //     navigator.clipboard.readText().then(text => {
-  //       text = text?.trim();
-  //       if (text && text.length > 3) {
-  //         currentSelection = text;
-  //         currentContextText = text;
-  //         // Show tooltip at center of screen
-  //         createTooltip(window.innerWidth / 2, window.innerHeight / 2);
-  //       }
-  //     }).catch(() => { });
-  //   }, 100);
-  // });
+
+  // Clipboard approach for Monaco (LeetCode)
+  document.addEventListener('copy', e => {
+      setTimeout(() => {
+        navigator.clipboard.readText().then(text => {
+          text = text?.trim();
+          if (text && text.length > 3) {
+            currentSelection = text;
+            currentContextText = text;
+            // Show tooltip at center of screen
+            createTooltip(window.innerWidth / 2, window.innerHeight / 2);
+          }
+        }).catch(() => { });
+      }, 100);
+  });
 })();
