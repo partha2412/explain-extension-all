@@ -1,5 +1,5 @@
 .et-tooltip {
-  position: absolute;
+  position: fixed;
   z-index: 2147483647;
   font-family: 'Segoe UI', system-ui, sans-serif;
   animation: et-fadein 0.15s ease;
@@ -50,8 +50,8 @@
   border: 1px solid #2e2e42;
   border-radius: 14px;
   padding: 14px 16px;
-  width: 300px;
-  max-width: 92vw;
+  width: clamp(340px, 45vw, 700px);
+  max-width: calc(100vw - 24px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.1);
   color: #f4f4f5;
 }
@@ -105,6 +105,8 @@
 }
 
 .et-tooltip .et-body {
+  flex: 1;
+  overflow-y: auto;
   font-size: 13.5px;
   line-height: 1.7;
   color: #d4d4d8;
@@ -272,4 +274,34 @@
     opacity: 1;
     background: #3f3f46;
   }
+}
+
+.code-wrapper {
+  position: relative;
+  margin: 12px 0;
+}
+
+.code-wrapper pre {
+  background: #1e1e1e;
+  color: #eee;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  cursor: pointer;
+  padding: 5px 8px;
+  border-radius: 5px;
+}
+
+.code-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

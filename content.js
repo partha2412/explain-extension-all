@@ -62,7 +62,8 @@
     document.body.appendChild(tooltipEl);
 
     const tw = tooltipEl.offsetWidth, th = tooltipEl.offsetHeight, vw = window.innerWidth;
-    let left = x - tw / 2, top = y - th - 12;
+    let left = x - tw / 2;
+    let top = y - th - 12;
 
     if (left < 8) left = 8;
     if (left + tw > vw - 8) left = vw - tw - 8;
@@ -74,6 +75,42 @@
     document.getElementById("et-explain-btn").addEventListener("click", e => {
       e.stopPropagation();
       handleExplain();
+    });
+  }
+
+  function repositionTooltip() {
+    if (!tooltipEl) return;
+
+    requestAnimationFrame(() => {
+      const rect = tooltipEl.getBoundingClientRect();
+
+      const GAP = 12;
+
+      let left = rect.left;
+      let top = rect.top;
+
+      // Right overflow
+      if (left + rect.width > window.innerWidth - GAP) {
+        left = window.innerWidth - rect.width - GAP;
+      }
+
+      // Left overflow
+      if (left < GAP) {
+        left = GAP;
+      }
+
+      // Bottom overflow
+      if (top + rect.height > window.innerHeight - GAP) {
+        top = window.innerHeight - rect.height - GAP;
+      }
+
+      // Top overflow
+      if (top < GAP) {
+        top = GAP;
+      }
+
+      tooltipEl.style.left = `${left + window.scrollX}px`;
+      tooltipEl.style.top = `${top + window.scrollY}px`;
     });
   }
 
@@ -93,47 +130,98 @@
         </div>
         <div class="et-loading-text">Getting explanation...</div>
       </div>`;
+    repositionTooltip();
   }
 
   function showResult(text) {
     if (!tooltipEl) return;
+
     tooltipEl.innerHTML = `
-      <div class="et-card">
-        <div class="et-header">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
-          </svg>
-          Explanation
-          <button id="copy-btn" title="Copy">
-            <i class="fa-solid fa-copy"></i>
-          </button>
-        </div>
-        <div class="et-body"></div>
-        <button class="et-close" id="et-close-btn">✕ Close</button>
-      </div>`;
-    tooltipEl.querySelector(".et-body").textContent = text;
+    <div class="et-card">
+      <div class="et-header">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4M12 8h.01"/>
+        </svg>
+        Explanation
+        <button id="copy-btn" title="Copy">
+          <i class="fa-solid fa-copy"></i>
+        </button>
+      </div>
+
+      <div class="et-body"></div>
+
+      <button class="et-close" id="et-close-btn">✕ Close</button>
+    </div>
+  `;
+    repositionTooltip();
+
+    const body = tooltipEl.querySelector(".et-body");
+
+    // Split by ```code```
+    const parts = text.split(/```([\s\S]*?)```/g);
+
+    parts.forEach((part, index) => {
+      // Even index = normal text
+      if (index % 2 === 0) {
+        if (part.trim()) {
+          const p = document.createElement("p");
+          p.textContent = part.trim();
+          body.appendChild(p);
+        }
+      }
+      // Odd index = code block
+      else {
+        const wrapper = document.createElement("div");
+        wrapper.className = "code-wrapper";
+
+        wrapper.innerHTML = `
+        <button class="code-copy-btn" title="Copy">
+          <i class="fa-solid fa-copy"></i>
+        </button>
+        <pre><code>${escapeHtml(part.trim())}</code></pre>
+      `;
+
+        const btn = wrapper.querySelector(".code-copy-btn");
+
+        btn.addEventListener("click", async (e) => {
+          e.stopPropagation();
+
+          await navigator.clipboard.writeText(part.trim());
+
+          btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+          setTimeout(() => {
+            btn.innerHTML = `<i class="fa-solid fa-copy"></i>`;
+          }, 1200);
+        });
+
+        body.appendChild(wrapper);
+      }
+    });
+
+    // Main explanation copy button
     document.getElementById("copy-btn").addEventListener("click", async (e) => {
       e.stopPropagation();
 
-      const content =
-        document.querySelector(".et-body")?.innerText || "";
+      await navigator.clipboard.writeText(body.innerText);
 
-      try {
-        await navigator.clipboard.writeText(content);
-
-        const btn = document.getElementById("copy-btn");
-        // right
-        btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
-        // copy
-        setTimeout(() => {
-          btn.innerHTML = `<i class="fa-solid fa-copy"></i>`;
-        }, 1200);
-
-      } catch (err) {
-        console.error(err);
-      }
+      const btn = document.getElementById("copy-btn");
+      btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+      setTimeout(() => {
+        btn.innerHTML = `<i class="fa-solid fa-copy"></i>`;
+      }, 1200);
     });
-    document.getElementById("et-close-btn").addEventListener("click", removeTooltip);
+
+    document
+      .getElementById("et-close-btn")
+      .addEventListener("click", removeTooltip);
+  }
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
   }
 
   function showError(msg) {
@@ -144,6 +232,7 @@
         <div class="et-body">${msg}</div>
         <button class="et-close" id="et-close-btn">✕ Close</button>
       </div>`;
+    repositionTooltip();
     document.getElementById("et-close-btn").addEventListener("click", removeTooltip);
   }
 
