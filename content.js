@@ -50,30 +50,91 @@
 
   function createTooltip(x, y) {
     removeTooltip();
+
     tooltipEl = document.createElement("div");
+
     tooltipEl.className = "et-tooltip";
+
     tooltipEl.innerHTML = `
-      <button class="et-btn" id="et-explain-btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
-        </svg>
-        Explain
-      </button>`;
+    <button
+      class="et-btn"
+      id="et-explain-btn"
+      type="button"
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4M12 8h.01"/>
+      </svg>
+      Explain
+    </button>
+  `;
+
+    // Protect tooltip from website layout/CSS
+    Object.assign(tooltipEl.style, {
+      position: "fixed",
+      zIndex: "2147483647",
+      display: "block",
+      visibility: "visible",
+      opacity: "1",
+      pointerEvents: "auto",
+      left: "0px",
+      top: "0px"
+    });
+
     document.body.appendChild(tooltipEl);
 
-    const tw = tooltipEl.offsetWidth, th = tooltipEl.offsetHeight, vw = window.innerWidth;
+    const button = tooltipEl.querySelector("#et-explain-btn");
+
+    // Check that it actually exists
+    if (!button) {
+      console.error("Explain button was not created");
+      return;
+    }
+
+    const tw = tooltipEl.offsetWidth;
+    const th = tooltipEl.offsetHeight;
+
     let left = x - tw / 2;
     let top = y - th - 12;
 
-    if (left < 8) left = 8;
-    if (left + tw > vw - 8) left = vw - tw - 8;
-    if (top < 8) top = y + 20;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
 
-    tooltipEl.style.left = `${left + window.scrollX}px`;
-    tooltipEl.style.top = `${top + window.scrollY}px`;
+    // Horizontal boundaries
+    if (left < 8) {
+      left = 8;
+    }
 
-    document.getElementById("et-explain-btn").addEventListener("click", e => {
+    if (left + tw > vw - 8) {
+      left = vw - tw - 8;
+    }
+
+    // Put below selection if there isn't enough space above
+    if (top < 8) {
+      top = y + 20;
+    }
+
+    // Prevent bottom overflow
+    if (top + th > vh - 8) {
+      top = vh - th - 8;
+    }
+
+    tooltipEl.style.left = `${left}px`;
+    tooltipEl.style.top = `${top}px`;
+
+    button.addEventListener("click", e => {
+      e.preventDefault();
       e.stopPropagation();
+
       handleExplain();
     });
   }
@@ -109,8 +170,8 @@
         top = GAP;
       }
 
-      tooltipEl.style.left = `${left + window.scrollX}px`;
-      tooltipEl.style.top = `${top + window.scrollY}px`;
+      tooltipEl.style.left = `${left}px`;
+      tooltipEl.style.top = `${top}px`;
     });
   }
 
@@ -236,10 +297,17 @@
     document.getElementById("et-close-btn").addEventListener("click", removeTooltip);
   }
 
-  function getConfig() {
-    return new Promise(resolve =>
-      chrome.storage.local.get(["et_config"], r => resolve(r.et_config || null))
-    );
+  async function getConfig() {
+    try {
+      const { et_config } =
+        await chrome.storage.local.get(["et_config"]);
+
+      return et_config || null;
+
+    } catch (error) {
+      console.error("Failed to read extension config:", error);
+      return null;
+    }
   }
 
   async function handleExplain() {
@@ -322,16 +390,16 @@
 
   // Clipboard approach for Monaco (LeetCode)
   document.addEventListener('copy', e => {
-      setTimeout(() => {
-        navigator.clipboard.readText().then(text => {
-          text = text?.trim();
-          if (text && text.length > 3) {
-            currentSelection = text;
-            currentContextText = text;
-            // Show tooltip at center of screen
-            createTooltip(window.innerWidth / 2, window.innerHeight / 2);
-          }
-        }).catch(() => { });
-      }, 100);
+    setTimeout(() => {
+      navigator.clipboard.readText().then(text => {
+        text = text?.trim();
+        if (text && text.length > 3) {
+          currentSelection = text;
+          currentContextText = text;
+          // Show tooltip at center of screen
+          createTooltip(window.innerWidth / 2, window.innerHeight / 2);
+        }
+      }).catch(() => { });
+    }, 100);
   });
 })();
